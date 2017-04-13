@@ -6,10 +6,7 @@
 # @Version : $Id$
 
 import MySQLdb
-myhost = "107.191.118.80"
-#myhost = "127.0.0.1"
-myuser = "spring"
-mypw = "123456"
+
 OperationalError = MySQLdb.OperationalError
 
 class MySQL:

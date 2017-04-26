@@ -23,20 +23,26 @@ CREATE TABLE Imitator (
     status_id varchar(128) NOT NULL COMMENT 'twitter的id',
     user_id varchar(128) COMMENT '用户的id,用于连接innovator的user_id',
     create_time varchar(128) DEFAULT 0 COMMENT '发信息的时间戳', 
-    URL BIGINT DEFAULT 0 COMMENT 'twitter中URL数目', 
-    pic BIGINT DEFAULT 0 COMMENT 'twitter中图片数目',
-    vedio BIGINT DEFAULT 0 COMMENT 'twitter中视频数目',
+    url BIGINT DEFAULT 0 COMMENT 'twitter中URL数目', 
+    #pic BIGINT DEFAULT 0 COMMENT 'twitter中图片数目',
+    #vedio BIGINT DEFAULT 0 COMMENT 'twitter中视频数目',
+    hashtag BIGINT DEFAULT 0 COMMENT 'twitter的标签数', 
+    atuser BIGINT DEFAULT 0 COMMENT 'twitter的@用户的数目',
+    sentiment double default 0 comment '情感分析', 
     characters BIGINT DEFAULT 0 COMMENT 'twitter的字符数',         
-    PRIMARY KEY (status_id)
+    PRIMARY KEY (status_id,user_id)
 );
 
 #Popularity的衡量
 CREATE TABLE Popularity (
     status_id varchar(128) NOT NULL COMMENT 'twitter的id', 
+    pretime BIGINT DEFAULT 0 COMMENT 'twitter发送后的时间戳', 
     favorite BIGINT DEFAULT 0 COMMENT 'twitter收获得点赞数', 
     retweet BIGINT DEFAULT 0 COMMENT 'twitter收获得转发数',
     tcommemt BIGINT DEFAULT 0 COMMENT 'twitter收获得评论数',
     bpopularity BIGINT DEFAULT 0 COMMENT '标准Popularity', 
     cpopularity BIGINT DEFAULT 0 COMMENT '算法计算的Popularity',     
-    PRIMARY KEY (status_id)
+    PRIMARY KEY (status_id,pretime)
 );
+
+

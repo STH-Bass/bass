@@ -29,7 +29,8 @@ CREATE TABLE Imitator (
     hashtag BIGINT DEFAULT 0 COMMENT 'twitter的标签数', 
     atuser BIGINT DEFAULT 0 COMMENT 'twitter的@用户的数目',
     sentiment double default 0 comment '情感分析', 
-    characters BIGINT DEFAULT 0 COMMENT 'twitter的字符数',         
+    characters BIGINT DEFAULT 0 COMMENT 'twitter的字符数',  
+    context varchar(512) COMMENT 'tweet文本',
     PRIMARY KEY (status_id,user_id)
 );
 

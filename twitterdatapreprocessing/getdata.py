@@ -10,6 +10,7 @@ from mysql import MySQL
 import datetime
 import time
 from sentiment import sentiment_score
+import re
 # 远程主机
 conn = MySQL()
 conn.selectDb('twitter')
@@ -22,7 +23,7 @@ mypw = ""
 myconn = MySQL(myhost, myuser, mypw)
 myconn.selectDb('twitter')
 
-
+'''
 # 获取popularity相关数据
 # retweet数目和favorite数目
 # 要求每隔1个小时得一个数据
@@ -90,7 +91,7 @@ for row in res_status_1:
                 print sql_ins_1 + "fail"
 
 print "set popularity finished"
-
+'''
 
 # imitator 模仿因子，获取tweet文本的信息
 # status_id, characters数目,createtime,
@@ -107,7 +108,11 @@ for row in res_stauts_2:
     url = context.count("https")
     hashtag = context.count("#")
     atuser = context.count("@")
-    sentiment = sentiment_score(context)
+    remove_http = re.compile(r'https://[a-zA-Z0-9.?/&=:]*', re.S)
+    remove_s = re.compile(r'@[a-zA-Z0-9.?/&=:]*', re.S)
+    context_rh = remove_http.sub("", context)
+    context_pre = remove_s.sub("", context_rh)
+    sentiment = sentiment_score(context_pre)
     # caculate the time
     date1 = datetime.datetime.now()
     date2 = datetime.datetime.strptime(str(ctime), "%Y-%m-%d %H:%M:%S")
@@ -120,9 +125,10 @@ for row in res_stauts_2:
     print "time:" + str(ctime)
     print "timehour:" + str(create_time)
     print "text:" + row['text']
-    print "hashtag" + str(hashtag)
+    print "hashtag:" + str(hashtag)
     print "url:" + str(url)
     print "atuser:" + str(atuser)
+    print "After precontext:" + context_pre
     print "sentiment:" + str(sentiment)
     sql_check = "select * from imitator where user_id='%s' and status_id='%s'" % (
         status_id_2, status_id_2)
@@ -130,7 +136,7 @@ for row in res_stauts_2:
     print "check:" + str(check)
     if check > 0:
         sql_up = "update imitator set hashtag='%d',url='%d',atuser='%d',sentiment='%s' characters='%d', create_time='%d',context='%s' where status_id='%s' and user_id='%s'" % (
-            hashtag, url, atuser, sentiment, characters, create_time, context, status_id_2, user_id_2)
+            hashtag, url, atuser, sentiment, characters, create_time, context_pre, status_id_2, user_id_2)
         try:
             myconn.query(sql_up)
             myconn.commit()
@@ -140,7 +146,7 @@ for row in res_stauts_2:
             print sql_up + "fail"
     else:
         sql_ins = "insert into imitator(status_id,user_id,hashtag,url,atuser,sentiment,characters,create_time,context) values('%s','%s','%d','%d','%d','%s','%d','%d','%s')" % (
-            status_id_2, user_id_2, hashtag, url, atuser, sentiment, characters, create_time, context)
+            status_id_2, user_id_2, hashtag, url, atuser, sentiment, characters, create_time, context_pre)
         try:
             myconn.query(sql_ins)
             myconn.commit()
@@ -150,7 +156,7 @@ for row in res_stauts_2:
             print sql_ins + "fail"
 print "set imitator finished"
 
-
+'''
 # innovator 创新因子，存储user本身特性的属性
 # status_id user_id twitter数目  follower数目 friends数目
 sql_user_3 = "select distinct * from users order by 'created_at' desc"
@@ -199,6 +205,6 @@ for row in res_stauts_3:
             myconn.rollback()
             print sql_ins + "fail"
 print "set innovator finished"
-
-conn.close()
-myconn.close()
+'''
+# conn.close()
+# myconn.close()
